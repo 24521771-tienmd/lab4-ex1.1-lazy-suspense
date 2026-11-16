@@ -70,7 +70,7 @@
 - **Done when:** fails only because `Skeleton.jsx` is missing.
 
 ### T06 · [3] Implement · `feat(skeleton): add accessible Skeleton primitive`
-- [ ] Done
+- [x] Done
 - **Files:** `src/components/skeleton/Skeleton.jsx`, `src/components/skeleton/skeleton.css`, `src/index.css` (add a global `.visually-hidden` utility if not present)
 - **Do:** implement per T04. Shimmer via CSS `@keyframes`; `@media (prefers-reduced-motion: reduce) { animation: none; }`.
 - **Done when:** T05 green; all green.
