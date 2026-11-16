@@ -51,7 +51,7 @@
 - **Do:** copy `TASK_DECOMPOSITION.md` and `AI_FAILURE_AUDIT.md` from `../_lab4-kit/Ex1.1/`; tick T01–T03.
 
 ### T04 · [1] Contract · `docs(contract): define lazy route boundaries and skeleton contract`
-- [ ] Done
+- [x] Done
 - **Files:** `docs/contracts/ex1.1-lazy-loading.md`
 - **Content:**
   - **Chunk map:** `ArenaPage`, `PeopleLayout`, `NotFoundPage`, `PersonDetail` become lazy chunks; `AppLayout`, `PeopleIndex`, skeletons stay in the entry chunk.
@@ -162,3 +162,4 @@
 | D1 | No chunk-load error boundary | Would require a class component (banned) or data-router `errorElement` (out of the agreed declarative mode) |
 | D2 | `Suspense` around `<Outlet />`, not around `<Routes>` | Header and navigation stay mounted → no layout shift, better perceived performance |
 | D3 | Loaders separated from `lazy()` declarations | Allows preloading and deterministic test mocking |
+| D4 | `Skeleton` accepts optional decorative `children` (added to the T04 signature) | `PersonDetailSkeleton` must compose `Skeleton` with its `<dl>` placeholder inside the same busy region (T08/T09); decided by the developer during T04 |
