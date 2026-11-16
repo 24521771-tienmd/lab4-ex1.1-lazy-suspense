@@ -93,7 +93,7 @@
 - **Done when:** T08 green; all green.
 
 ### T10 · [2] Fail Test · `test(routes): add failing tests for lazy PersonDetail Suspense fallback`
-- [ ] Done
+- [x] Done
 - **Files:** `src/routes/lazyRoutes.test.jsx`, `src/App.lazy.test.jsx`
 - **Assert:**
   - `loadPersonDetail` is a function; `await loadPersonDetail()` resolves to a module whose `default` is a component.
