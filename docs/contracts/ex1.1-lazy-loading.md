@@ -140,17 +140,17 @@ Mirrors the `PersonDetail` box model (`<article>` → `<h2>` + `<dl className="p
 
 ### Shared dimensions (CLS = 0)
 
-Defined on `:root` in `src/pages/people/people.css` (T07) and used by both the real content and the skeletons:
+Defined on `:root` (T07) and used by both the real content and the skeletons:
 
-| Custom property | Used by |
-|---|---|
-| `--dossier-heading-height` | `.content-area h2` and the dossier heading bar |
-| `--dossier-row-height` | `.person-details dt/dd` and the placeholder rows |
-| `--dossier-row-gap` | `.person-details` row gap (content and skeleton) |
-| `--dossier-panel-padding` | `.content-area` padding |
-| `--page-skeleton-min-height` | `.page-skeleton` |
+| Custom property | Defined in | Used by |
+|---|---|---|
+| `--dossier-heading-height` | `src/pages/people/people.css` | `.content-area h2` and the dossier heading bar |
+| `--dossier-row-height` | `src/pages/people/people.css` | `.person-details dt/dd` and the placeholder rows |
+| `--dossier-row-gap` | `src/pages/people/people.css` | `.person-details` row gap (content and skeleton) |
+| `--dossier-panel-padding` | `src/pages/people/people.css` | `.content-area` padding |
+| `--page-skeleton-min-height` | `src/index.css` (Decision D5) | `.page-skeleton` |
 
-Concrete values are set in T07 with no visual change from Ex1.2.
+Concrete values are set in T07 with no visual change from Ex1.2. `--dossier-row-height` is `1lh` because the rows use `line-height: normal` (font-dependent); `1lh` resolves to exactly one line of the element's own inherited font, so real and placeholder rows match in any font.
 
 ## 5. Preloading — `PeopleLayout`
 
@@ -182,3 +182,4 @@ Tests use deferred promises, never timers.
 | D2 | `Suspense` around `<Outlet />`, not around `<Routes>` | Header and navigation stay mounted → no layout shift |
 | D3 | Loaders separated from `lazy()` declarations | Enables preloading and deterministic test mocking |
 | D4 | `Skeleton` accepts optional decorative `children` | `PersonDetailSkeleton` must compose `Skeleton` and place its `<dl>` placeholder inside the same busy region (T08/T09); the T04 plan signature had no slot for it. Decided by the developer during T04 |
+| D5 | `--page-skeleton-min-height` is declared in global `src/index.css`, not `people.css` | `people.css` is imported by `PeopleLayout`, which becomes a lazy chunk (T13); `PageSkeleton` renders on `/` and `*` before that CSS loads, so the variable would be undefined and the fallback would collapse. Decided by the developer during T07 |

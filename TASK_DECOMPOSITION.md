@@ -76,7 +76,7 @@
 - **Done when:** T05 green; all green.
 
 ### T07 · [4] Refactor · `refactor(people): extract dossier dimensions into CSS custom properties`
-- [ ] Done
+- [x] Done
 - **Files:** `src/pages/people/people.css`, `tests/people-css.test.js`
 - **Do:** replace the hard-coded sizes used by `.person-details` and the detail heading with custom properties on `:root` — `--dossier-heading-height`, `--dossier-row-height`, `--dossier-row-gap`, `--dossier-panel-padding`, plus `--page-skeleton-min-height`. Set explicit `min-height` values so content and skeleton share the same box. No visual change. Extend the CSS guard test to assert the properties exist.
 - **Done when:** all green; **manual:** detail page looks identical to Ex1.2.
@@ -163,3 +163,4 @@
 | D2 | `Suspense` around `<Outlet />`, not around `<Routes>` | Header and navigation stay mounted → no layout shift, better perceived performance |
 | D3 | Loaders separated from `lazy()` declarations | Allows preloading and deterministic test mocking |
 | D4 | `Skeleton` accepts optional decorative `children` (added to the T04 signature) | `PersonDetailSkeleton` must compose `Skeleton` with its `<dl>` placeholder inside the same busy region (T08/T09); decided by the developer during T04 |
+| D5 | `--page-skeleton-min-height` declared in global `src/index.css` instead of `people.css` (T07) | `people.css` loads with the lazy `PeopleLayout` chunk (T13); `PageSkeleton` on `/` and `*` would see an undefined variable and collapse; decided by the developer during T07 |

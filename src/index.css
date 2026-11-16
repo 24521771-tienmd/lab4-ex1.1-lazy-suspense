@@ -15,6 +15,10 @@
   --color-muted: #52615c;
   --color-accent: #9c2f27;
   --color-border: #d7dfdc;
+
+  /* Route-level fallback height. Global (entry chunk), not in people.css:
+     PageSkeleton renders before any lazy route CSS has loaded (Decision D5). */
+  --page-skeleton-min-height: min(60vh, 36rem);
 }
 
 * {

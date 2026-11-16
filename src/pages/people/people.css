@@ -1,5 +1,23 @@
 /* Responsive master–detail "Case Dossier" grid (Ex1.2 · T17). */
 
+/*
+ * Dossier dimensions shared by PersonDetail and PersonDetailSkeleton (Ex1.1 · T07)
+ * so content and skeleton occupy the same box (CLS = 0).
+ * --dossier-row-height is `1lh`: one line of the row's own inherited font
+ * (line-height: normal), i.e. exactly the Ex1.2 row height in any font.
+ * --page-skeleton-min-height lives in src/index.css (global; Decision D5).
+ */
+:root {
+  --dossier-heading-font-size: clamp(1.5rem, 4vw, 2rem);
+  --dossier-heading-line-height: 1.2;
+  --dossier-heading-height: calc(
+    var(--dossier-heading-font-size) * var(--dossier-heading-line-height)
+  );
+  --dossier-row-height: 1lh;
+  --dossier-row-gap: 0.5rem;
+  --dossier-panel-padding: clamp(1rem, 4vw, 1.5rem);
+}
+
 .people-frame {
   display: grid;
   grid-template-columns: minmax(280px, 1fr) 2fr;
@@ -50,16 +68,17 @@
 
 .content-area {
   min-width: 0;
-  padding: clamp(1rem, 4vw, 1.5rem);
+  padding: var(--dossier-panel-padding);
   border: 1px solid var(--color-border);
   border-radius: 0.75rem;
   background: #ffffff;
 }
 
 .content-area h2 {
+  min-height: var(--dossier-heading-height);
   margin: 0 0 1rem;
-  font-size: clamp(1.5rem, 4vw, 2rem);
-  line-height: 1.2;
+  font-size: var(--dossier-heading-font-size);
+  line-height: var(--dossier-heading-line-height);
   overflow-wrap: anywhere;
 }
 
@@ -71,8 +90,13 @@
 .person-details {
   display: grid;
   grid-template-columns: max-content 1fr;
-  gap: 0.5rem 1.25rem;
+  gap: var(--dossier-row-gap) 1.25rem;
   margin: 0;
+}
+
+.person-details dt,
+.person-details dd {
+  min-height: var(--dossier-row-height);
 }
 
 .person-details dt {
