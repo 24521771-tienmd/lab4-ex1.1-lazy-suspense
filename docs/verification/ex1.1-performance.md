@@ -49,7 +49,7 @@ Entry chunk after T15: 262.44 kB (83.57 kB gzip) → **−14.74 kB raw / −3.80
 
 > Results below were observed and reported by the developer (24521771) on 2026-11-16 and transcribed verbatim by Claude Code, which did not run these checks itself.
 
-Setup used: `npm run build` → `npm run preview` (production bundle, `localhost:4173`), Chrome DevTools.
+Setup used (PowerShell): `npm.cmd run build` → `npm.cmd exec -- vite preview --port 4173` (production bundle; the project has no `preview` package script), tested at `http://localhost:4173/people/p-002` in a Chrome Incognito window with DevTools network throttling off; the Lighthouse results come from this production preview.
 An earlier attempt on the dev server (`localhost:5173`, Slow 4G) was discarded because the unbundled dev build does not reflect the production chunk split or performance.
 
 ### 3.1 Slow 3G — skeleton then content, no visible jump
