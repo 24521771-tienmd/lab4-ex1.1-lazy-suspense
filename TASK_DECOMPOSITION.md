@@ -82,7 +82,7 @@
 - **Done when:** all green; **manual:** detail page looks identical to Ex1.2.
 
 ### T08 · [2] Fail Test · `test(skeleton): add failing tests for PersonDetailSkeleton and PageSkeleton`
-- [ ] Done
+- [x] Done
 - **Files:** `src/components/skeleton/PersonDetailSkeleton.test.jsx`, `src/components/skeleton/PageSkeleton.test.jsx`
 - **Assert:** `PersonDetailSkeleton` → busy region with text *Loading player dossier*, contains an element with class `person-details` holding exactly 2 `dt` and 2 `dd` placeholders, none exposed to the accessibility tree (`queryByRole('term')` → null); `PageSkeleton` → busy region with *Loading page* and class `page-skeleton`.
 
