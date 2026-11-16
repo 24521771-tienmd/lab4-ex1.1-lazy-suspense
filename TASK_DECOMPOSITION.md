@@ -87,7 +87,7 @@
 - **Assert:** `PersonDetailSkeleton` → busy region with text *Loading player dossier*, contains an element with class `person-details` holding exactly 2 `dt` and 2 `dd` placeholders, none exposed to the accessibility tree (`queryByRole('term')` → null); `PageSkeleton` → busy region with *Loading page* and class `page-skeleton`.
 
 ### T09 · [3] Implement · `feat(skeleton): add dimension-matched PersonDetailSkeleton and PageSkeleton`
-- [ ] Done
+- [x] Done
 - **Files:** `src/components/skeleton/PersonDetailSkeleton.jsx`, `src/components/skeleton/PageSkeleton.jsx`, `src/components/skeleton/skeleton.css`
 - **Do:** compose `Skeleton`; reuse the T07 custom properties so each placeholder row is exactly `--dossier-row-height` tall.
 - **Done when:** T08 green; all green.
