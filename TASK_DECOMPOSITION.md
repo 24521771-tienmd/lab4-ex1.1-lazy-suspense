@@ -126,7 +126,7 @@
 - **Assert:** with `loadPersonDetail` mocked as `vi.fn()`, hovering (`user.hover`) a person link calls it once; tabbing focus onto a link calls it; nothing is called on initial render.
 
 ### T15 · [3] Implement · `perf(people): preload PersonDetail chunk on link hover and focus`
-- [ ] Done
+- [x] Done
 - **Files:** `src/pages/people/PeopleLayout.jsx`
 - **Do:** import `loadPersonDetail` from `lazyRoutes.js`; attach `onPointerEnter` and `onFocus` to each `NavLink`. No state, no effect.
 - **Done when:** T14 green; all green. **Manual:** DevTools → Network → hover a name → the `PersonDetail-*.js` request fires before clicking.
