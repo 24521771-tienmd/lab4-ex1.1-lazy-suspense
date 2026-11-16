@@ -121,7 +121,7 @@
 - **Done when:** T12 green; all green; `npm run build` output lists separate chunks named after `ArenaPage`, `PeopleLayout`, `NotFoundPage`, `PersonDetail`.
 
 ### T14 · [2] Fail Test · `test(people): add failing test for detail chunk preloading`
-- [ ] Done
+- [x] Done
 - **Files:** `src/pages/people/PeopleLayout.test.jsx`
 - **Assert:** with `loadPersonDetail` mocked as `vi.fn()`, hovering (`user.hover`) a person link calls it once; tabbing focus onto a link calls it; nothing is called on initial render.
 

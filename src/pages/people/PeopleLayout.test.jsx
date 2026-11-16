@@ -1,9 +1,18 @@
 import { render, screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router'
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import App from '../../App.jsx'
 import { people } from '../../data/people.js'
+import { loadPersonDetail } from '../../routes/lazyRoutes.js'
 import PeopleLayout from './PeopleLayout.jsx'
+
+// Only the PersonDetail loader is replaced (Ex1.1 · T14); the other loaders
+// stay real so <App /> can still load the lazy PeopleLayout chunk.
+vi.mock('../../routes/lazyRoutes.js', async (importOriginal) => ({
+  ...(await importOriginal()),
+  loadPersonDetail: vi.fn(),
+}))
 
 describe('PeopleLayout master list', () => {
   it('lists one dossier link per person and the index prompt at /people', async () => {
@@ -60,5 +69,54 @@ describe('PeopleLayout master list', () => {
         expect(link).toHaveClass('link')
       }
     }
+  })
+})
+
+describe('PeopleLayout PersonDetail chunk preloading', () => {
+  beforeEach(() => {
+    vi.mocked(loadPersonDetail).mockClear()
+  })
+
+  // Minimal tree at the index route: the detail route is never rendered, so
+  // any loadPersonDetail call can only come from preloading.
+  function renderPeopleIndex() {
+    render(
+      <MemoryRouter initialEntries={['/people']}>
+        <Routes>
+          <Route path="/people" element={<PeopleLayout people={people} />}>
+            <Route index element={null} />
+          </Route>
+        </Routes>
+      </MemoryRouter>,
+    )
+    return screen.getByRole('navigation', { name: 'Player dossiers' })
+  }
+
+  it('does not preload the detail chunk on initial render', () => {
+    renderPeopleIndex()
+
+    expect(loadPersonDetail).not.toHaveBeenCalled()
+  })
+
+  it('preloads the detail chunk once when a person link is hovered', async () => {
+    const user = userEvent.setup()
+    const dossierNav = renderPeopleIndex()
+    const link = within(dossierNav).getByRole('link', { name: people[1].name })
+
+    await user.hover(link)
+
+    expect(loadPersonDetail).toHaveBeenCalledTimes(1)
+  })
+
+  it('preloads the detail chunk when keyboard focus reaches a person link', async () => {
+    const user = userEvent.setup()
+    const dossierNav = renderPeopleIndex()
+
+    await user.tab()
+
+    expect(within(dossierNav).getAllByRole('link')).toContain(
+      document.activeElement,
+    )
+    expect(loadPersonDetail).toHaveBeenCalled()
   })
 })
