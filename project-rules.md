@@ -1,7 +1,7 @@
-# Project Rules — Lab 4 · Exercise 1.2
+# Project Rules — Lab 4 · Exercise 1.1
 
 > UIT S3T · Lab 4: Multi-Route SPA Architecture, Context Form Engine & Full-Stack React 19 Systems
-> Repository: `Week4/Ex1.2` — an independent Git repository for Exercise 1.2 only.
+> Repository: `Week4/Ex1.1` — an independent Git repository for Exercise 1.1 only.
 
 These rules are binding for every human and AI contribution to this repository (Claude Code, Copilot, ChatGPT, etc.).
 `TASK_DECOMPOSITION.md` is the work plan; this file is the law the plan must obey.
@@ -17,39 +17,28 @@ Lab 4 exercises are built cumulatively. Each exercise starts from a snapshot of 
 Lab 3 HW3 (KRAFTON x PUBG Vietnam Arena)  →  Ex1.2  →  Ex1.1  →  Ex1.3  →  Ex1.7.1
 ```
 
-- This repository starts from: **Lab 3 HW3 — `24521771-tienmd/Week-3-HW-3-KRAFTON-x-PUBG-Vietnam-Championship-Airdrop-Arena`** (imported as the first `chore` baseline commit).
+- This repository starts from: **the finished `Week4/Ex1.2` repository** (imported as the first `chore` baseline commit).
 - Every exercise folder is its **own Git repository** with its own remote.
 - Never push to, commit in, or modify the Lab 3 HW3 repository or any sibling `Week4/Ex*` folder.
 - The only sibling path an AI assistant may *read* is `../_lab4-kit/` (rules, plans, prompts).
 - Previous plans are archived under `docs/history/` and are reference-only.
 
-## 2. Current Exercise Scope — Ex1.2
+## 2. Current Exercise Scope — Ex1.1
 
-Exercise group **1.2 / 1.2.1 / 1.2.2 + In-Class Sprint 1** (Lab 4 slides 10–12): *Declarative React Router v7 layout architecture and a responsive master–detail "Case Dossier" directory.*
+Exercise **1.1** (Lab 4 slide 9): *Performance and resiliency upgrades — route-level code splitting with `React.lazy`, `<Suspense>` boundaries, dimension-matched skeletons (CLS = 0), and accessible loading states.*
+
+Starting point: the finished Ex1.2 repository (router v7, `PeopleLayout`, `PersonDetail`, `ArenaPage`, `NotFoundPage`). All Ex1.2 behaviour and tests must keep passing.
 
 Deliverables:
 
-1. Migrate the single-view Lab 3 HW3 app into a multi-route SPA using **React Router v7 declarative mode** (`<BrowserRouter>` + `<Routes>` / `<Route element>`).
-2. A shared `AppLayout` (header, primary `<nav>` with `NavLink` active styling, single `<main>`, footer) rendering child routes through `<Outlet />`.
-3. The existing PUBG Arena screen becomes the index route (`ArenaPage`) with **no behaviour change**.
-4. Sprint 1 contract — `PeopleLayout.jsx` (sidebar of `NavLink`s + `<Outlet />`) and `PersonDetail.jsx` (`useParams()` → `people.find()` → 404 guard → semantic `<dl>`).
-5. Responsive CSS Grid master–detail: `grid-template-columns: minmax(280px, 1fr) 2fr`, single column at ≤ 640px, no horizontal scroll at 375px.
-6. Sprint 1 DevTools checkpoints: zero console warnings, clean URL parameter parsing, deep links survive a page reload.
+1. A reusable `Skeleton` primitive exposing `aria-busy="true"` and `aria-live="polite"`, with visually-hidden loading text and `aria-hidden` decorative shapes.
+2. Dimension-matched skeleton variants: `PersonDetailSkeleton` (mirrors the `<dl>` rows of `PersonDetail`) and `PageSkeleton` (route-level fallback). Shared CSS custom properties guarantee identical box sizes → CLS = 0.
+3. `PersonDetail` loaded with `React.lazy(() => import(...))` and wrapped in `<Suspense fallback={<PersonDetailSkeleton />}>` in its route element (slide 9 contract).
+4. Route-level chunking for `ArenaPage`, `PeopleLayout`, and `NotFoundPage`, with a `<Suspense>` boundary scoped around `AppLayout`'s `<Outlet />` so the header and navigation never disappear while a chunk loads.
+5. Intent-based preloading: hovering or focusing a person link starts downloading the `PersonDetail` chunk.
+6. Evidence: separate chunks in `npm run build` output and a CLS = 0 measurement, recorded in `docs/verification/`.
 
-Route map (final state of this exercise):
-
-| Path | Element | Notes |
-|---|---|---|
-| `/` | `AppLayout` | layout route, renders `<Outlet />` inside `<main>` |
-| `/` (index) | `ArenaPage` | former `App.jsx` body |
-| `/people` | `PeopleLayout` | master list + nested `<Outlet />` |
-| `/people` (index) | `PeopleIndex` | "Select a player dossier" prompt |
-| `/people/:id` | `PersonDetail` | 404 state when id is unknown |
-| `*` | `NotFoundPage` | unknown URLs |
-
-Data contract — `src/data/people.js`: `Person = { id: string, name: string, role: string }`, exactly these three fields, ids like `'p-001'`. Data is illustrative/fictional.
-
-Out of scope: `React.lazy`/`Suspense` (Ex1.1), forms and Context (Ex1.3), fetching and backend (Ex1.7.1).
+Out of scope: forms (Ex1.3), data fetching/backend (Ex1.7.1), error-boundary class components (banned).
 
 Anything not listed in this section or in `TASK_DECOMPOSITION.md` is **out of scope**. Do not add features, dependencies, or refactors "while you are there".
 
@@ -127,6 +116,14 @@ RED commit policy:
 - Missing entities render an explicit not-found state with `role="alert"` — never a blank screen, never a thrown render error.
 - Key–value data uses `<dl>/<dt>/<dd>`; mapped pairs use `<Fragment key={stableKey}>`.
 - Props flow down; no prop mutation; immutable state updates only.
+
+### 7.1 Code-Splitting and Suspense Standards (from Ex1.1)
+
+- Lazy components are declared at **module top level** (`const X = lazy(loadX)`), never inside a component body.
+- Loader functions live in `src/routes/lazyRoutes.js` so the same `import()` can be reused for preloading.
+- Every `lazy` component renders inside a `<Suspense>` whose fallback is a dimension-matched skeleton — never `null`, never a spinner that changes layout.
+- Suspense boundaries are scoped so persistent chrome (header, nav, sidebar) stays mounted while a chunk loads.
+- Skeletons expose `aria-busy="true"` + `aria-live="polite"`, contain visually-hidden loading text, and mark decorative shapes `aria-hidden="true"`. Shimmer animation is disabled under `prefers-reduced-motion: reduce`.
 
 ## 8. Accessibility and Responsive Design
 
