@@ -101,7 +101,7 @@
 - **Hint:** deferred mocks make Suspense observable deterministically; do not rely on timing. Use `vi.mock('./routes/lazyRoutes.js', async (importOriginal) => ({ ...(await importOriginal()), loadPersonDetail: … }))` so loaders added later (T13) are not lost, and `vi.resetModules()` + a dynamic `import('./App.jsx')` per test because `lazy()` caches its resolved module.
 
 ### T11 · [3] Implement · `feat(routes): lazy-load PersonDetail behind a Suspense skeleton boundary`
-- [ ] Done
+- [x] Done
 - **Files:** `src/routes/lazyRoutes.js`, `src/App.jsx`
 - **Do:** create `lazyRoutes.js` with `loadPersonDetail` (other loaders come in T13); in `App.jsx`: `const PersonDetail = lazy(loadPersonDetail)` at module top level; wrap the `:id` route element in `<Suspense fallback={<PersonDetailSkeleton />}>`.
 - **Done when:** T10 green; Ex1.2 tests still green (adapt them to `await findBy…` only where lazy loading makes content async — **do not** delete assertions).

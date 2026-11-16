@@ -12,8 +12,12 @@ function renderAt(path) {
   )
 }
 
-function expectPersonNotFound() {
-  expect(screen.getByRole('alert')).toHaveTextContent('404: Person Not Found')
+// PersonDetail is lazy (Ex1.1 · T11): wait for the chunk with findBy before
+// the synchronous assertions.
+async function expectPersonNotFound() {
+  expect(await screen.findByRole('alert')).toHaveTextContent(
+    '404: Person Not Found',
+  )
   expect(
     screen.getByRole('link', { name: 'Back to dossiers' }),
   ).toHaveAttribute('href', '/people')
@@ -23,12 +27,12 @@ function expectPersonNotFound() {
 }
 
 describe('PersonDetail param lookup', () => {
-  it('renders the dossier of the person matching /people/p-003', () => {
+  it('renders the dossier of the person matching /people/p-003', async () => {
     const person = people.find((p) => p.id === 'p-003')
     renderAt('/people/p-003')
 
     expect(
-      screen.getByRole('heading', { level: 2, name: person.name }),
+      await screen.findByRole('heading', { level: 2, name: person.name }),
     ).toBeInTheDocument()
 
     const main = screen.getByRole('main')
@@ -41,15 +45,15 @@ describe('PersonDetail param lookup', () => {
     ])
   })
 
-  it('renders a 404 alert and keeps the sidebar for an unknown id', () => {
+  it('renders a 404 alert and keeps the sidebar for an unknown id', async () => {
     renderAt('/people/p-999')
 
-    expectPersonNotFound()
+    await expectPersonNotFound()
   })
 
-  it('treats a numeric-looking id as unknown (string ids, no coercion)', () => {
+  it('treats a numeric-looking id as unknown (string ids, no coercion)', async () => {
     renderAt('/people/3')
 
-    expectPersonNotFound()
+    await expectPersonNotFound()
   })
 })
