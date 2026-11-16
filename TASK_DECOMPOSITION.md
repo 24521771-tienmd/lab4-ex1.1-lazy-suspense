@@ -142,7 +142,7 @@
   5. Real output summaries of `npm test`, `npm run lint`, `npm run build`.
 
 ### T17 · ops · `docs(readme): document Ex1.1 code-splitting architecture`
-- [ ] Done
+- [x] Done
 - **Files:** `README.md`
 - **Do:** describe the chunk map, Suspense boundary placement, skeleton contract, preloading, and lineage (HW3 → Ex1.2 → Ex1.1).
 
