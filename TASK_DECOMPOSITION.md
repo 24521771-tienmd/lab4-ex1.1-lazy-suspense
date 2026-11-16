@@ -132,7 +132,7 @@
 - **Done when:** T14 green; all green. **Manual:** DevTools → Network → hover a name → the `PersonDetail-*.js` request fires before clicking.
 
 ### T16 · ops · `docs(verification): record chunk split and CLS evidence`
-- [ ] Done
+- [x] Done
 - **Files:** `docs/verification/ex1.1-performance.md`
 - **Do:** Claude pastes the real `npm run build` chunk table. The **student** records (before the commit):
   1. Network → *Slow 3G* → open `/people/p-002` → the skeleton is visible, then content replaces it with no visible jump.
