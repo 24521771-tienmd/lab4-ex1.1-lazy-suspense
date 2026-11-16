@@ -150,10 +150,10 @@
 
 ## Final Verification
 
-- [ ] `git log --oneline` shows T00–T17, one commit each.
-- [ ] `npm test`, `npm run lint`, `npm run build`, `git diff --check` pass.
-- [ ] `git grep -n "lazy(" src` → only top-level declarations in `App.jsx`.
-- [ ] Every Ex1.2 test still exists and passes.
+- [x] `git log --oneline` shows T00–T17, one commit each.
+- [x] `npm test`, `npm run lint`, `npm run build`, `git diff --check` pass.
+- [x] `git grep -n "lazy(" src` → only top-level declarations in `App.jsx`.
+- [x] Every Ex1.2 test still exists and passes.
 
 ## Decisions
 
