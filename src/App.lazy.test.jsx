@@ -1,10 +1,10 @@
-import { act, render, screen } from '@testing-library/react'
+import { act, render, screen, within } from '@testing-library/react'
 import { MemoryRouter } from 'react-router'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { people } from './data/people.js'
 
 /**
- * Suspense is made observable deterministically: the lazy loader returns a
+ * Suspense is made observable deterministically: a lazy loader returns a
  * promise the test resolves by hand. No timers.
  */
 function createDeferred() {
@@ -15,13 +15,27 @@ function createDeferred() {
   return { promise, resolve }
 }
 
-const control = vi.hoisted(() => ({ personDetail: null }))
-
-// Keep every real loader (later tasks add more) and replace only the one under test.
-vi.mock('./routes/lazyRoutes.js', async (importOriginal) => ({
-  ...(await importOriginal()),
-  loadPersonDetail: () => control.personDetail.promise,
+// A test "arms" a loader by putting a deferred here; unarmed loaders use the real import().
+const control = vi.hoisted(() => ({
+  arenaPage: null,
+  peopleLayout: null,
+  notFoundPage: null,
+  personDetail: null,
 }))
+
+vi.mock('./routes/lazyRoutes.js', async (importOriginal) => {
+  const original = await importOriginal()
+  const armed = (name, loader) => () =>
+    control[name] ? control[name].promise : original[loader]()
+
+  return {
+    ...original,
+    loadArenaPage: armed('arenaPage', 'loadArenaPage'),
+    loadPeopleLayout: armed('peopleLayout', 'loadPeopleLayout'),
+    loadNotFoundPage: armed('notFoundPage', 'loadNotFoundPage'),
+    loadPersonDetail: armed('personDetail', 'loadPersonDetail'),
+  }
+})
 
 async function renderAppAt(path) {
   // lazy() caches its resolved module, so every test needs a fresh App module graph.
@@ -33,13 +47,29 @@ async function renderAppAt(path) {
   )
 }
 
+/** The page skeleton must render inside the single <main>, as a busy region. */
+async function expectPageSkeletonInMain() {
+  const main = screen.getByRole('main')
+  const label = await within(main).findByText('Loading page')
+  expect(label.closest('[aria-busy]')).toHaveAttribute('aria-busy', 'true')
+}
+
+/** Persistent chrome stays mounted while a route chunk loads (Decision D2). */
+function expectChromeVisible() {
+  expect(screen.getByRole('banner')).toBeVisible()
+  expect(screen.getByRole('navigation', { name: 'Primary' })).toBeVisible()
+}
+
 beforeEach(() => {
   vi.resetModules()
-  control.personDetail = createDeferred()
+  for (const name of Object.keys(control)) {
+    control[name] = null
+  }
 })
 
 describe('lazy PersonDetail route', () => {
   it('shows the dossier skeleton and keeps the sidebar while the chunk loads, then swaps in the dossier', async () => {
+    control.personDetail = createDeferred()
     const person = people.find((p) => p.id === 'p-001')
     await renderAppAt('/people/p-001')
 
@@ -67,5 +97,63 @@ describe('lazy PersonDetail route', () => {
     expect(
       screen.getByRole('navigation', { name: 'Player dossiers' }),
     ).toBeInTheDocument()
+  })
+})
+
+describe('route-level chunk boundaries', () => {
+  it('shows the page skeleton inside main at / while header and Primary nav stay visible, then the arena', async () => {
+    control.arenaPage = createDeferred()
+    await renderAppAt('/')
+
+    await expectPageSkeletonInMain()
+    expectChromeVisible()
+    expect(
+      screen.queryByRole('heading', { level: 1, name: 'KRAFTON x PUBG Vietnam' }),
+    ).not.toBeInTheDocument()
+
+    const arenaPageModule = await import('./pages/ArenaPage.jsx')
+    await act(async () => {
+      control.arenaPage.resolve(arenaPageModule)
+    })
+
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'KRAFTON x PUBG Vietnam' }),
+    ).toBeInTheDocument()
+    expect(screen.queryByText('Loading page')).not.toBeInTheDocument()
+    expectChromeVisible()
+  })
+
+  it('shows the page skeleton at /nope, then the not-found page', async () => {
+    control.notFoundPage = createDeferred()
+    await renderAppAt('/nope')
+
+    await expectPageSkeletonInMain()
+    expectChromeVisible()
+    expect(
+      screen.queryByRole('heading', { name: 'Page not found' }),
+    ).not.toBeInTheDocument()
+
+    const notFoundPageModule = await import('./pages/NotFoundPage.jsx')
+    await act(async () => {
+      control.notFoundPage.resolve(notFoundPageModule)
+    })
+
+    expect(
+      await screen.findByRole('heading', { name: 'Page not found' }),
+    ).toBeInTheDocument()
+    expect(screen.queryByText('Loading page')).not.toBeInTheDocument()
+  })
+
+  it('lazyRoutes.js exports all four route loaders', async () => {
+    const actual = await vi.importActual('./routes/lazyRoutes.js')
+
+    for (const loader of [
+      'loadArenaPage',
+      'loadPeopleLayout',
+      'loadNotFoundPage',
+      'loadPersonDetail',
+    ]) {
+      expect(typeof actual[loader], loader).toBe('function')
+    }
   })
 })

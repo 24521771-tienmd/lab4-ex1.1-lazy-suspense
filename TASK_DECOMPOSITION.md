@@ -107,7 +107,7 @@
 - **Done when:** T10 green; Ex1.2 tests still green (adapt them to `await findBy…` only where lazy loading makes content async — **do not** delete assertions).
 
 ### T12 · [2] Fail Test · `test(routes): add failing tests for route-level chunk boundaries`
-- [ ] Done
+- [x] Done
 - **Files:** `src/App.lazy.test.jsx`
 - **Assert** (deferred mocks for `loadArenaPage`, `loadPeopleLayout`, `loadNotFoundPage`):
   - `/` → before resolution, the `main` landmark contains the *Loading page* busy region while the *Primary* navigation and header are visible; after resolution, the arena heading appears.
