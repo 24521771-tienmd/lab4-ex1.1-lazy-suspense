@@ -64,7 +64,7 @@
   - **Decision D1:** no error boundary for chunk-load failures in this exercise — React error boundaries require class components (banned) and declarative-mode routes have no `errorElement`. Recorded as a known limitation.
 
 ### T05 · [2] Fail Test · `test(skeleton): add failing tests for accessible Skeleton primitive`
-- [ ] Done
+- [x] Done
 - **Files:** `src/components/skeleton/Skeleton.test.jsx`
 - **Assert:** the rendered region has `aria-busy="true"` and `aria-live="polite"`; default label text *Loading content* is present (and a custom `label` replaces it); `lines={4}` renders 4 elements with class `skeleton-line`, all `aria-hidden="true"`; a custom `className` is appended.
 - **Done when:** fails only because `Skeleton.jsx` is missing.
