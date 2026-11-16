@@ -1,4 +1,6 @@
+import { Suspense } from 'react'
 import { NavLink, Outlet } from 'react-router'
+import PageSkeleton from '../components/skeleton/PageSkeleton.jsx'
 
 const navLinkClassName = ({ isActive }) => (isActive ? 'active-link' : 'link')
 
@@ -26,7 +28,10 @@ export default function AppLayout() {
       </header>
 
       <main className="arena-main" id="main-content">
-        <Outlet />
+        {/* Only the routed content suspends; header, nav and footer stay mounted (D2). */}
+        <Suspense fallback={<PageSkeleton />}>
+          <Outlet />
+        </Suspense>
       </main>
 
       <footer className="site-footer">

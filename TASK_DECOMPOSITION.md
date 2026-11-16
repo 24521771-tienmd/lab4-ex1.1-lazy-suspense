@@ -115,7 +115,7 @@
   - `lazyRoutes.js` exports all four loaders.
 
 ### T13 · [3] Implement · `feat(routes): code-split ArenaPage, PeopleLayout and NotFoundPage`
-- [ ] Done
+- [x] Done
 - **Files:** `src/routes/lazyRoutes.js`, `src/App.jsx`, `src/layouts/AppLayout.jsx`
 - **Do:** add the three loaders; top-level `lazy()` in `App.jsx`; `<Suspense fallback={<PageSkeleton />}>` around `<Outlet />` inside `AppLayout`'s `<main>`.
 - **Done when:** T12 green; all green; `npm run build` output lists separate chunks named after `ArenaPage`, `PeopleLayout`, `NotFoundPage`, `PersonDetail`.

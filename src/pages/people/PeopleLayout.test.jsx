@@ -6,14 +6,15 @@ import { people } from '../../data/people.js'
 import PeopleLayout from './PeopleLayout.jsx'
 
 describe('PeopleLayout master list', () => {
-  it('lists one dossier link per person and the index prompt at /people', () => {
+  it('lists one dossier link per person and the index prompt at /people', async () => {
     render(
       <MemoryRouter initialEntries={['/people']}>
         <App />
       </MemoryRouter>,
     )
 
-    const dossierNav = screen.getByRole('navigation', {
+    // PeopleLayout is a lazy route chunk inside App (Ex1.1 · T13): await it.
+    const dossierNav = await screen.findByRole('navigation', {
       name: 'Player dossiers',
     })
     const dossierLinks = within(dossierNav).getAllByRole('link')

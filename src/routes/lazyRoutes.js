@@ -5,4 +5,7 @@
  * Each loader resolves to a module whose `default` export is the page component.
  */
 
+export const loadArenaPage = () => import('../pages/ArenaPage.jsx')
+export const loadPeopleLayout = () => import('../pages/people/PeopleLayout.jsx')
+export const loadNotFoundPage = () => import('../pages/NotFoundPage.jsx')
 export const loadPersonDetail = () => import('../pages/people/PersonDetail.jsx')

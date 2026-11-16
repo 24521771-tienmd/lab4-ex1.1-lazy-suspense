@@ -11,12 +11,14 @@ function renderAt(path) {
   )
 }
 
+// ArenaPage and NotFoundPage are lazy route chunks (Ex1.1 · T13): page content
+// is awaited with findBy; the eager AppLayout chrome is still queried with getBy.
 describe('App', () => {
-  it('renders the arena heading', () => {
+  it('renders the arena heading', async () => {
     renderAt('/')
 
     expect(
-      screen.getByRole('heading', { level: 1, name: 'KRAFTON x PUBG Vietnam' }),
+      await screen.findByRole('heading', { level: 1, name: 'KRAFTON x PUBG Vietnam' }),
     ).toBeInTheDocument()
   })
 })
@@ -36,7 +38,7 @@ describe('App layout and primary navigation', () => {
     ).toHaveAttribute('href', '/people')
   })
 
-  it('marks the Arena link active and shows the arena heading at /', () => {
+  it('marks the Arena link active and shows the arena heading at /', async () => {
     renderAt('/')
 
     const primaryNav = screen.getByRole('navigation', { name: 'Primary' })
@@ -45,15 +47,15 @@ describe('App layout and primary navigation', () => {
     expect(arenaLink).toHaveClass('active-link')
 
     expect(
-      screen.getByRole('heading', { level: 1, name: 'KRAFTON x PUBG Vietnam' }),
+      await screen.findByRole('heading', { level: 1, name: 'KRAFTON x PUBG Vietnam' }),
     ).toBeInTheDocument()
   })
 
-  it('renders the not-found page with a link back home for unknown URLs', () => {
+  it('renders the not-found page with a link back home for unknown URLs', async () => {
     renderAt('/does-not-exist')
 
     expect(
-      screen.getByRole('heading', { name: 'Page not found' }),
+      await screen.findByRole('heading', { name: 'Page not found' }),
     ).toBeInTheDocument()
 
     const main = screen.getByRole('main')
